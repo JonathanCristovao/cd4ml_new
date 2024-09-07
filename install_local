@@ -1,0 +1,70 @@
+#!/bin/bash
+
+echo "Installing virtualenv"
+python -m pip install virtualenv
+
+echo "Removing existing virtual environment if exists"
+rm -rf .venv
+
+echo "Creating virtual environment"
+python -m virtualenv .venv
+
+echo "Activating virtual environment"
+source .venv/Scripts/activate  # Certifique-se de que o caminho está correto para Windows
+
+echo "Installing requirements"
+pip install -r requirements.txt
+
+echo "Running tests"
+./run_tests.sh
+
+
+# echo installing virtualenv
+# rm -rf .venv
+# virtualenv .venv
+
+# echo activating virtualenv
+# source .venv/bin/activate
+
+# echo installing requirements
+# pip3 install -r requirements.txt
+
+# echo running tests
+# ./run_tests.sh
+
+
+# pyenv
+
+# echo "Installing pyenv-win"
+# git clone https://github.com/pyenv-win/pyenv-win.git $HOME/.pyenv
+
+# # Adiciona o pyenv ao PATH
+# export PATH="$HOME/.pyenv/pyenv-win/bin:$HOME/.pyenv/pyenv-win/shims:$PATH"
+
+# echo "Installing Python 3.9.17 using pyenv"
+# pyenv install 3.9.17
+# pyenv rehash
+
+# echo "Setting global Python version to 3.9.17"
+# pyenv global 3.9.17
+
+# echo "Updating pip"
+# pip install --upgrade pip
+
+# echo "Installing virtualenv"
+# pip install virtualenv
+
+# echo "Removing existing virtual environment if exists"
+# rm -rf .venv
+
+# echo "Creating virtual environment with Python 3.9"
+# python -m virtualenv .venv
+
+# echo "Activating virtual environment"
+# source .venv/Scripts/activate  # Certifique-se de que o caminho está correto para Windows
+
+# echo "Installing requirements"
+# pip install -r requirements.txt
+
+# echo "Running tests"
+# ./run_tests.sh

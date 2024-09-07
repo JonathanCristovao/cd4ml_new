@@ -1,0 +1,15 @@
+docker-compose up -d --build --remove-orphans
+
+
+
+jenkins
+
+1. se os plugins do blue ocean nao tiver instalado, instalar eles. 
+http://localhost:10000/pluginManager/installed
+
+2. abrir o blueocean e criar um pipeline
+
+ - conectar o jenkins no github
+ gerar um token no repositorio do github.
+
+ http://localhost:10000/blue/organizations/jenkins/pipeline-editor/cd4ml/acttivity/
