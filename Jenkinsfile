@@ -1,5 +1,5 @@
 pipeline {
-  agent any  // Aloca um agente para executar o pipeline
+  agent any
   stages {
     stage('Install dependencies') {
       steps {
@@ -8,12 +8,11 @@ pipeline {
     }
 
     stage('Run tests') {
-    steps {
+      steps {
         sh 'chmod +x ./run_tests.sh'
         sh './run_tests.sh'
+      }
     }
-}
-
 
     stage('Run ML pipeline') {
       steps {
@@ -29,6 +28,7 @@ pipeline {
           equals expected: 'default', actual: "${params.algorithm_name}"
           equals expected: 'default', actual: "${params.algorithm_params_name}"
         }
+
       }
       post {
         success {
@@ -38,22 +38,21 @@ pipeline {
         failure {
           sh 'python3 run_python_script.py register_model ${MLFLOW_TRACKING_URL} no'
         }
+
       }
       steps {
         sh 'python3 run_python_script.py acceptance'
       }
     }
-  }
 
+  }
   environment {
     MLFLOW_TRACKING_URL = 'http://mlflow:12000'
     MLFLOW_S3_ENDPOINT_URL = 'http://minio:9000'
   }
-
   options {
     timestamps()
   }
-
   parameters {
     choice(name: 'problem_name', choices: ['houses', 'groceries', 'iris'], description: 'Choose the problem name')
     string(name: 'ml_pipeline_params_name', defaultValue: 'default', description: 'Specify the ml_pipeline_params file')
@@ -61,8 +60,7 @@ pipeline {
     string(name: 'algorithm_name', defaultValue: 'default', description: 'Specify the algorithm (overrides problem_params)')
     string(name: 'algorithm_params_name', defaultValue: 'default', description: 'Specify the algorithm params')
   }
-
   triggers {
-    pollSCM('* * * * *')  // Faz o polling do SCM a cada minuto
+    pollSCM('* * * * *')
   }
 }
