@@ -11,5 +11,6 @@ http://localhost:10000/pluginManager/installed
 
  - conectar o jenkins no github
  gerar um token no repositorio do github.
+ token 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
 
  http://localhost:10000/blue/organizations/jenkins/pipeline-editor/cd4ml/acttivity/
