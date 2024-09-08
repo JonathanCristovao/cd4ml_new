@@ -8,10 +8,12 @@ pipeline {
     }
 
     stage('Run tests') {
-      steps {
+    steps {
+        sh 'chmod +x ./run_tests.sh'
         sh './run_tests.sh'
-      }
     }
+}
+
 
     stage('Run ML pipeline') {
       steps {
