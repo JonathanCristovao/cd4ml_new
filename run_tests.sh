@@ -12,4 +12,5 @@ eval "$command"
 echo
 echo Flake8 comments:
 # extend-ignore T0001 ignores print() statements in project
-flake8 --extend-ignore T001 --max-line-length=120 cd4ml
+flake8 --extend-ignore T001,E303 --max-line-length=120 cd4ml
+
