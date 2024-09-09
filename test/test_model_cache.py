@@ -251,3 +251,4 @@ class TestModelCache:
 
     # def get_sample_model_path(self):
     #     return Path(Path(__file__).parent, "resources", "full_model.pkl")
+    #
