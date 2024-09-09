@@ -47,7 +47,7 @@ pipeline {
 
   }
   environment {
-    MLFLOW_TRACKING_URL = 'http://localhost:12000' // 'http://mlflow:12000'
+    MLFLOW_TRACKING_URL = 'http://mlflow:5000' // 'http://mlflow:12000'
     MLFLOW_S3_ENDPOINT_URL ='http://localhost:9000' //'http://minio:9000'
   }
   options {
