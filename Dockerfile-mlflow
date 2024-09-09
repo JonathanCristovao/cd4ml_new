@@ -11,8 +11,8 @@ EXPOSE 5000
 
 # Define variáveis de ambiente para acesso ao S3
 ENV MLFLOW_S3_ENDPOINT_URL=${MLFLOW_S3_ENDPOINT_URL}
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+ENV AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+ENV AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
 
 # Cria um ponto de montagem para persistência de dados do MLflow
 VOLUME /mnt/mlflow
