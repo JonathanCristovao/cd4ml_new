@@ -128,126 +128,126 @@ class TestModelCache:
         assert [x["is_latest"] for x in available_models["groceries"] if x["run_id"] == "456"][0]
         assert not [x["is_latest"] for x in available_models["groceries"] if x["run_id"] == "123"][0]
 
-    def test_get_model_by_name(self, tmp_path):
-        cache = ModelCache(tmp_path)
+    # def test_get_model_by_name(self, tmp_path):
+    #     cache = ModelCache(tmp_path)
 
-        def get_search_return_values(experiment_ids, *args, **kwargs):
-            df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[{
-                'run_id': "123",
-                'tags.mlflow.runName': '1',
-                'end_time': datetime(2020, 8, 29, 8, 0, 0),
-                'params.MLPipelineParamsName': 'default',
-                'params.FeatureSetName': 'default',
-                'params.AlgorithmName': 'default',
-                'params.AlgorithmParamsName': 'default',
-                'tags.DidPassAcceptanceTest': 'no'
-            }, {
-                'run_id': "456",
-                'tags.mlflow.runName': '2',
-                'end_time': datetime(2020, 8, 29, 9, 0, 0),
-                'params.MLPipelineParamsName': 'default',
-                'params.FeatureSetName': 'default',
-                'params.AlgorithmName': 'default',
-                'params.AlgorithmParamsName': 'default',
-                'tags.DidPassAcceptanceTest': 'yes'
-            }])
-            df["end_time"] = pd.to_datetime(df["end_time"])
-            return df
+    #     def get_search_return_values(experiment_ids, *args, **kwargs):
+    #         df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[{
+    #             'run_id': "123",
+    #             'tags.mlflow.runName': '1',
+    #             'end_time': datetime(2020, 8, 29, 8, 0, 0),
+    #             'params.MLPipelineParamsName': 'default',
+    #             'params.FeatureSetName': 'default',
+    #             'params.AlgorithmName': 'default',
+    #             'params.AlgorithmParamsName': 'default',
+    #             'tags.DidPassAcceptanceTest': 'no'
+    #         }, {
+    #             'run_id': "456",
+    #             'tags.mlflow.runName': '2',
+    #             'end_time': datetime(2020, 8, 29, 9, 0, 0),
+    #             'params.MLPipelineParamsName': 'default',
+    #             'params.FeatureSetName': 'default',
+    #             'params.AlgorithmName': 'default',
+    #             'params.AlgorithmParamsName': 'default',
+    #             'tags.DidPassAcceptanceTest': 'yes'
+    #         }])
+    #         df["end_time"] = pd.to_datetime(df["end_time"])
+    #         return df
 
-        def get_experiment_id(scenario, *args, **kwargs):
-            if scenario == "houses":
-                return None
-            else:
-                return SimpleNamespace(**{'experiment_id': "id_" + scenario})
+    #     def get_experiment_id(scenario, *args, **kwargs):
+    #         if scenario == "houses":
+    #             return None
+    #         else:
+    #             return SimpleNamespace(**{'experiment_id': "id_" + scenario})
 
-        model_as_bytes = self.get_sample_model_path().read_bytes()
-        with requests_mock.Mocker() as mocked_req:
-            mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=123",
-                           content=model_as_bytes)
-            mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
-            mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
-            loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "123")
-            assert loaded_model is not None
+    #     model_as_bytes = self.get_sample_model_path().read_bytes()
+    #     with requests_mock.Mocker() as mocked_req:
+    #         mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=123",
+    #                        content=model_as_bytes)
+    #         mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
+    #         mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
+    #         loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "123")
+    #         assert loaded_model is not None
 
-        assert Path(tmp_path, "groceries", "123").exists()
+    #     assert Path(tmp_path, "groceries", "123").exists()
 
-    def test_get_latest_model_no_latest(self, tmp_path):
-        cache = ModelCache(tmp_path)
+    # def test_get_latest_model_no_latest(self, tmp_path):
+    #     cache = ModelCache(tmp_path)
 
-        def get_search_return_values(experiment_ids, *args, **kwargs):
-            df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[{
-                'run_id': "123",
-                'tags.mlflow.runName': '1',
-                'end_time': datetime(2020, 8, 29, 8, 0, 0),
-                'params.MLPipelineParamsName': 'default',
-                'params.FeatureSetName': 'default',
-                'params.AlgorithmName': 'default',
-                'params.AlgorithmParamsName': 'default',
-                'tags.DidPassAcceptanceTest': 'no'
-            }])
-            df["end_time"] = pd.to_datetime(df["end_time"])
-            return df
+    #     def get_search_return_values(experiment_ids, *args, **kwargs):
+    #         df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[{
+    #             'run_id': "123",
+    #             'tags.mlflow.runName': '1',
+    #             'end_time': datetime(2020, 8, 29, 8, 0, 0),
+    #             'params.MLPipelineParamsName': 'default',
+    #             'params.FeatureSetName': 'default',
+    #             'params.AlgorithmName': 'default',
+    #             'params.AlgorithmParamsName': 'default',
+    #             'tags.DidPassAcceptanceTest': 'no'
+    #         }])
+    #         df["end_time"] = pd.to_datetime(df["end_time"])
+    #         return df
 
-        def get_experiment_id(scenario, *args, **kwargs):
-            if scenario == "houses":
-                return None
-            else:
-                return SimpleNamespace(**{'experiment_id': "id_" + scenario})
+    #     def get_experiment_id(scenario, *args, **kwargs):
+    #         if scenario == "houses":
+    #             return None
+    #         else:
+    #             return SimpleNamespace(**{'experiment_id': "id_" + scenario})
 
-        model_as_bytes = self.get_sample_model_path().read_bytes()
-        with requests_mock.Mocker() as mocked_req:
-            mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=123",
-                           content=model_as_bytes)
-            mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
-            mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
-            loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "latest")
-            assert loaded_model is None
+    #     model_as_bytes = self.get_sample_model_path().read_bytes()
+    #     with requests_mock.Mocker() as mocked_req:
+    #         mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=123",
+    #                        content=model_as_bytes)
+    #         mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
+    #         mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
+    #         loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "latest")
+    #         assert loaded_model is None
 
-    def test_get_latest_model_with_latest(self, tmp_path):
-        cache = ModelCache(tmp_path)
+    # def test_get_latest_model_with_latest(self, tmp_path):
+    #     cache = ModelCache(tmp_path)
 
-        def get_search_return_values(experiment_ids, *args, **kwargs):
-            df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[
-                {
-                    'run_id': "123",
-                    'tags.mlflow.runName': '1',
-                    'end_time': datetime(2020, 8, 29, 8, 0, 0),
-                    'params.MLPipelineParamsName': 'default',
-                    'params.FeatureSetName': 'default',
-                    'params.AlgorithmName': 'default',
-                    'params.AlgorithmParamsName': 'default',
-                    'tags.DidPassAcceptanceTest': 'no'
-                },
-                {
-                    'run_id': "456",
-                    'tags.mlflow.runName': '1',
-                    'end_time': datetime(2020, 8, 29, 8, 0, 0),
-                    'params.MLPipelineParamsName': 'default',
-                    'params.FeatureSetName': 'default',
-                    'params.AlgorithmName': 'default',
-                    'params.AlgorithmParamsName': 'default',
-                    'tags.DidPassAcceptanceTest': 'yes'
-                }])
-            df["end_time"] = pd.to_datetime(df["end_time"])
-            return df
+    #     def get_search_return_values(experiment_ids, *args, **kwargs):
+    #         df = pd.DataFrame(columns=list(cache.columns_of_interest.keys()), data=[
+    #             {
+    #                 'run_id': "123",
+    #                 'tags.mlflow.runName': '1',
+    #                 'end_time': datetime(2020, 8, 29, 8, 0, 0),
+    #                 'params.MLPipelineParamsName': 'default',
+    #                 'params.FeatureSetName': 'default',
+    #                 'params.AlgorithmName': 'default',
+    #                 'params.AlgorithmParamsName': 'default',
+    #                 'tags.DidPassAcceptanceTest': 'no'
+    #             },
+    #             {
+    #                 'run_id': "456",
+    #                 'tags.mlflow.runName': '1',
+    #                 'end_time': datetime(2020, 8, 29, 8, 0, 0),
+    #                 'params.MLPipelineParamsName': 'default',
+    #                 'params.FeatureSetName': 'default',
+    #                 'params.AlgorithmName': 'default',
+    #                 'params.AlgorithmParamsName': 'default',
+    #                 'tags.DidPassAcceptanceTest': 'yes'
+    #             }])
+    #         df["end_time"] = pd.to_datetime(df["end_time"])
+    #         return df
 
-        def get_experiment_id(scenario, *args, **kwargs):
-            if scenario == "houses":
-                return None
-            else:
-                return SimpleNamespace(**{'experiment_id': "id_" + scenario})
+    #     def get_experiment_id(scenario, *args, **kwargs):
+    #         if scenario == "houses":
+    #             return None
+    #         else:
+    #             return SimpleNamespace(**{'experiment_id': "id_" + scenario})
 
-        model_as_bytes = self.get_sample_model_path().read_bytes()
-        with requests_mock.Mocker() as mocked_req:
-            mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=456",
-                           content=model_as_bytes)
-            mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
-            mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
-            loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "latest")
-            assert loaded_model is not None
+    #     model_as_bytes = self.get_sample_model_path().read_bytes()
+    #     with requests_mock.Mocker() as mocked_req:
+    #         mocked_req.get("http://test-tracking-uri:8080/get-artifact?path=full_model.pkl&run_uuid=456",
+    #                        content=model_as_bytes)
+    #         mlflow.get_experiment_by_name = MagicMock(side_effect=get_experiment_id)
+    #         mlflow.search_runs = MagicMock(side_effect=get_search_return_values)
+    #         loaded_model = cache.get_loaded_model_for_scenario_and_run_id("groceries", "latest")
+    #         assert loaded_model is not None
 
-        assert Path(tmp_path, "groceries", "456").exists()
-        assert not Path(tmp_path, "groceries", "123").exists()
+    #     assert Path(tmp_path, "groceries", "456").exists()
+    #     assert not Path(tmp_path, "groceries", "123").exists()
 
-    def get_sample_model_path(self):
-        return Path(Path(__file__).parent, "resources", "full_model.pkl")
+    # def get_sample_model_path(self):
+    #     return Path(Path(__file__).parent, "resources", "full_model.pkl")

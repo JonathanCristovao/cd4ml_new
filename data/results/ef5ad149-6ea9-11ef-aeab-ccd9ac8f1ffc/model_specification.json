@@ -1,0 +1,10 @@
+{
+    "problem_name": "houses",
+    "data_downloader": "default",
+    "ml_pipeline_params_name": "default",
+    "feature_set_name": "default",
+    "algorithm_name": "default",
+    "algorithm_name_actual": "random_forest",
+    "algorithm_params_name": "default",
+    "git_hash": "NOTIMPLEMENTED"
+}
