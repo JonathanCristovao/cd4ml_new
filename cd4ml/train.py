@@ -6,6 +6,12 @@ logger = logging.getLogger(__name__)
 
 def train_model(encoded_train_data, target, model_name, params, seed=None):
 
+    # Validação do parâmetro 'max_features'
+    if 'max_features' in params and params['max_features'] == 'auto':
+        logger.warning("'auto' is not a valid value for max_features. Replacing with 'sqrt'.")
+        params['max_features'] = 'sqrt'  # Substitua por 'sqrt' ou 'log2'
+
+
     model_class = get_algorithm_class(model_name)
 
     logger.info("Training {} model".format(model_name))
